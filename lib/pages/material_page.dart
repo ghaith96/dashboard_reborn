@@ -1,10 +1,14 @@
+import 'dart:ui';
+
+import 'package:dashboard_reborn/pages/about_page.dart';
 import 'package:dashboard_reborn/utils/colors.dart';
 import 'package:dashboard_reborn/utils/functions.dart';
+import 'package:dashboard_reborn/utils/functions.dart' as prefix0;
 import 'package:dashboard_reborn/widgets/bottom_sheet.dart';
-import 'package:dashboard_reborn/widgets/tile.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class MyMaterialPage extends StatefulWidget {
   @override
@@ -14,32 +18,19 @@ class MyMaterialPage extends StatefulWidget {
 class _MyMaterialPageState extends State<MyMaterialPage> {
   @override
   Widget build(BuildContext context) {
-    List<String> itemNames = [
-      'Go ahead,',
-      'Swipe up from below.',
-    ]; //name of each individual tile
-
-    List<Color> tileColors = [
-      null,
-      null,
-      null,
-    ]; //color of the individual tile, mapped to index values
-
-    List<Color> splashColors = [
-      MyColors.accentColor,
-      null,
-      null,
-    ]; //splash color of the individual tile, mapped to index values
+    final double _width = MediaQuery.of(context).size.width;
+    final double _height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: invertColorsMaterial(context), //color changes
-      // according to currently set theme
+      backgroundColor: invertColorsMaterial(context),
       body: WillPopScope(
         onWillPop: this.handleBackPressed,
         child: Container(
           child: Stack(
             children: <Widget>[
               Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(
@@ -61,64 +52,206 @@ class _MyMaterialPageState extends State<MyMaterialPage> {
                         Text(
                           'Material++',
                           style: TextStyle(
-                              fontFamily: 'Rubik',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 22.0,
-                              fontStyle: FontStyle.italic,
-                              color: invertColorsMild(context)),
+                            fontFamily: 'Rubik',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 22.0,
+                            fontStyle: FontStyle.italic,
+                            color: invertColorsMild(context),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 1,
-                      childAspectRatio: 1,
-                      children: List.generate(
-                        1,
-                        (index) {
-                          return Hero(
-                            tag: 'tile0',
-                            child: buildTile(
-                              context,
-                              tileColors[0],
-                              splashColors[0],
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      '${itemNames[0]}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20.0,
-                                          color: invertColorsMild(context)),
-                                      softWrap: true,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      '${itemNames[1]}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 20.0,
-                                          color: invertColorsMild(context)),
-                                      softWrap: true,
-                                      overflow: TextOverflow.fade,
-                                      maxLines: 1,
-                                    ),
-                                  ]),
+                  Stack(
+                    children: <Widget>[
+                      Hero(
+                        tag: 'tile0',
+                        child: Container(
+                          height: _height / 1.8,
+                          width: _width / 1.2,
+                          margin: EdgeInsets.all(20.0),
+                          child: Material(
+                            color: invertInvertColorsMild(context),
+                            elevation: 5.0,
+                            borderRadius: BorderRadius.circular(10.0),
+                            shadowColor: shadowColor(context),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(10.0),
+                              splashColor: invertColorsStrong(context),
+                              child: null,
                               onTap: () {
-                                doNothing();
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionsBuilder: (
+                                      BuildContext context,
+                                      Animation<double> animation,
+                                      Animation<double> secondaryAnimation,
+                                      Widget child,
+                                    ) {
+                                      return SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: Offset(0.0, 1.0),
+                                          end: Offset.zero,
+                                        ).animate(animation),
+                                        child: SlideTransition(
+                                          position: Tween<Offset>(
+                                            begin: Offset.zero,
+                                            end: Offset(0.0, 1.0),
+                                          ).animate(secondaryAnimation),
+                                          child: child,
+                                        ),
+                                      );
+                                    },
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                    pageBuilder: (BuildContext context,
+                                            Animation<double> animation,
+                                            Animation<double>
+                                                secondaryAnimation) =>
+                                        Stack(
+                                      children: <Widget>[
+                                        Hero(
+                                          tag: 'tile0',
+                                          child: Container(
+                                            child: Material(
+                                              color: invertInvertColorsMild(
+                                                  context),
+                                              elevation: 5.0,
+                                              shadowColor: shadowColor(context),
+                                              child: InkWell(
+                                                splashColor:
+                                                    invertColorsStrong(context),
+                                                child: null,
+                                                onTap: doNothing,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 50.0,
+                                          left: 10.0,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: <Widget>[
+                                              Material(
+                                                color: Colors.transparent,
+                                                child: IconButton(
+                                                  icon: Icon(EvaIcons.close),
+                                                  tooltip: 'Go back',
+                                                  color:
+                                                      invertColorsMild(context),
+                                                  iconSize: 26.0,
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ),
+                                              Text(
+                                                'Close',
+                                                style: TextStyle(
+                                                  fontFamily: 'Rubik',
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 22.0,
+                                                  fontStyle: FontStyle.italic,
+                                                  color:
+                                                      invertColorsMild(context),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Hero(
+                                            tag: 'elt1',
+                                            child: Container(
+                                              width: 200.0,
+                                              height: 200.0,
+                                              child: Image.asset(
+                                                'assets/images/icon/icon-nobg.png',
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 15.0,
+                                          right: 15.0,
+                                          child: FloatingActionButton(
+                                            heroTag: 'elt2',
+                                            foregroundColor:
+                                                invertInvertColorsMild(context),
+                                            backgroundColor:
+                                                MyColors.accentColor,
+                                            elevation: 5.0,
+                                            child: Icon(EvaIcons.close),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        bottom: 100.0,
+                        left: 40.0,
+                        child: Text(
+                          'Hello, world!',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20.0,
+                            color: invertColorsMild(context),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 60.0,
+                        left: 40.0,
+                        child: Hero(
+                          tag: 'elt1',
+                          child: Text(
+                            'Click me.',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 30.0,
+                              color: invertColorsMild(context),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 40.0,
+                        right: 40.0,
+                        child: Container(
+                          height: 40.0,
+                          width: 40.0,
+                          child: FloatingActionButton(
+                            heroTag: 'elt2',
+                            foregroundColor: invertInvertColorsMild(context),
+                            backgroundColor: MyColors.accentColor,
+                            elevation: 3.0,
+                            child: Icon(EvaIcons.infoOutline),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) {
+                                    return MyAboutPage();
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
